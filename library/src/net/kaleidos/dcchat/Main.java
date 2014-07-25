@@ -1,6 +1,7 @@
 package net.kaleidos.dcchat;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 import interfaces.NotificationListener;
 
@@ -14,10 +15,13 @@ public class Main {
 		public void run() {
 			
 			try {
-				//this.dcchat = new DCChat("superalex", "dc.p2plibre.es", 2780, true, nl);
-				this.dcchat = new DCChat("betatester2", "dc.ekparty.org", 2783, false, nl);
+				byte[] unencodedPid = new byte[24];
+				new Random().nextBytes(unencodedPid);
+				
+				//this.dcchat = new DCChat("superalex", "dc.p2plibre.es", 2780, true, unencodedPid, nl);
+				this.dcchat = new DCChat("betatester2", "dc.ekparty.org", 2783, false, unencodedPid, nl);
 				System.out.println("INIT" +  this.dcchat);				
-				// this.dcchat = new DCChat("superalex", "dc.ekparty.org", 2783, false, nl);
+				// this.dcchat = new DCChat("superalex", "dc.ekparty.org", 2783, false, unencodedPid, nl);
 				this.dcchat.connect();
 			} catch (NoSuchAlgorithmException | IOException e) {
 				// TODO Auto-generated catch block

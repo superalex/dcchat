@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
@@ -31,11 +30,11 @@ public class DCChat {
 	private Socket socket;
 	private DataOutputStream os;
 	private BufferedReader is;
-	// private HashMap<String, String> nicksBySid = new HashMap<String,
-	// String>();
+	private byte[] unencodedPid;
 	private NotificationListener notificationListener;
 
 	public DCChat(String username, String host, int port, boolean useSSL,
+			byte[] unencodedPid,
 			NotificationListener notificationListener)
 			throws UnknownHostException, IOException, NoSuchAlgorithmException {
 		this.username = username;
@@ -43,6 +42,11 @@ public class DCChat {
 		this.useSSL = useSSL;
 		this.host = host;
 		this.port = port;
+		this.unencodedPid = unencodedPid;
+		//A valid way of generating it
+		/*byte[] unencodedPid = new byte[24];
+		new Random().nextBytes(unencodedPid);*/		
+		
 	}
 		
 	public void connect() throws UnknownHostException, IOException{
@@ -107,16 +111,16 @@ public class DCChat {
 	}
 
 	private String cleanText(String text) {
-		// TODO Clean more
 		text = text.replaceAll("\\\\s", " ");
 		text = text.replaceAll("\\\\n", "\n");
+		text = text.replace("\\\\", "\\");
 		return text;
 	}
 	
 	private String prepareText(String text) {
-		// TODO prepare more
 		text = text.replaceAll(" ", "\\\\s");
 		text = text.replaceAll("\n", "\\\\n");
+		text = text.replace("\\", "\\\\");
 		return text;
 	}
 
@@ -144,10 +148,7 @@ public class DCChat {
 		// Information SID
 		this.ssid = input;
 
-		// PID and CID Generation
-		// TODO: randomize
-		byte[] unencodedPid = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
-				3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4 };
+		// PID and CID Generation		
 		this.pid = Base32.encode(unencodedPid);
 		Tiger tt = new Tiger();
 		tt.update(unencodedPid, 0, unencodedPid.length);
@@ -159,7 +160,6 @@ public class DCChat {
 		os.writeBytes("BINF " + this.ssid
 				+ " SS9999999 SL10 NI" + this.username
 				+ " ID" + this.cid + " PD" + this.pid + "\n");
-		// os.writeBytes("BINF "+ this.ssid +" ID"+cid+" PD"+pid+"\n");
 	}
 
 	private void receiveBroadcastMessage(String input) {
