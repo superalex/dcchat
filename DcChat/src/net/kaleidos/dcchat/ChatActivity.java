@@ -15,9 +15,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -41,7 +43,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	ListView userList;
 	ScrollView textScroll;
 	TextView textView;
-	TextView userMessage;
+	EditText userMessage;
 	Button userMessageOk;
 	
 
@@ -55,8 +57,17 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		//Data.dcChatAsyncTask.addMessageable(this);
 		
 		textView = (TextView) findViewById(R.id.textList);
-		userMessage = (TextView) findViewById(R.id.userMessage);
+		userMessage = (EditText) findViewById(R.id.userMessage);
 		userMessageOk = (Button) findViewById(R.id.userMessageOk);
+		
+		
+		userMessageOk.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				sendMessage();				
+			}
+		});
 		
 		
 		dcChatAsyncTask = new DcChatAsyncTask(this);
@@ -317,6 +328,23 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	public void userDisconnected(String userSid) {
 		
 		
+	}
+	
+	
+	private void sendMessage(){
+		String msg = userMessage.getText().toString();
+		userMessage.setText("");
+		try{
+			if (currentChat == PUBLIC_CHAT) {
+				dcChatAsyncTask.getDcchat().sendBroadcastMessage(msg, true);
+			} else {
+				dcChatAsyncTask.getDcchat().sendDirectMessage(currentChat, msg);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+			
+	
 	}
 	
 	
