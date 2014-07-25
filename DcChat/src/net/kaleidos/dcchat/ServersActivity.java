@@ -2,11 +2,11 @@ package net.kaleidos.dcchat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -18,13 +18,14 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class ServersActivity extends ActionBarActivity {
 	public static final String PREFS_NAME = "DcChatPreferences";
 	private static final String DEFAULT_SERVER_LIST = "adcs://dc.p2plibre.es:2780;adcs://dc.ekparty.org;";
 	private ArrayList<String> serverList;
 	private ArrayAdapter<String> serverListAdapter;
+	private SharedPreferences settings;
+
 	
 
 
@@ -42,21 +43,16 @@ public class ServersActivity extends ActionBarActivity {
 		
 		final ListView listview = (ListView) findViewById(R.id.serverList);
 	    
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		settings = getSharedPreferences(PREFS_NAME, 0);
 	    String serversString = settings.getString("servers", "");
 		
 		if (serversString.equals("")){
 			serversString = DEFAULT_SERVER_LIST;
+			serverList.addAll( Arrays.asList(serversString.split(";")) );
+			serverList.add((String) getResources().getText(R.string.new_server));
+		} else {
+			serverList.addAll( Arrays.asList(serversString.split(";")) );
 		}
-			
-		serverList.addAll( Arrays.asList(serversString.split(";")) );
-		
-	    
-		serverList.add((String) getResources().getText(R.string.new_server));
-	    
-	    
-	    
-
 		
 		
 		serverListAdapter = new ArrayAdapter<String>(this, R.layout.server_row, serverList);
@@ -107,13 +103,7 @@ public class ServersActivity extends ActionBarActivity {
 		}
 	}
 	
-	public void removeServer(int position){
-		if (position != serverList.size() -1) {
-			serverList.remove(position);
-			serverListAdapter.notifyDataSetChanged();
-		}
 	
-	}
 	
 	public void selectServer(int position){
 	
@@ -157,8 +147,16 @@ public class ServersActivity extends ActionBarActivity {
 		serverList.add((String) getResources().getText(R.string.new_server));
 		serverListAdapter.notifyDataSetChanged();
 		
+		saveServerList();
 		
-		
+	}
+	
+	public void removeServer(int position){
+		if (position != serverList.size() -1) {
+			serverList.remove(position);
+			serverListAdapter.notifyDataSetChanged();
+			saveServerList();
+		}	
 	}
 
 	@Override
@@ -178,5 +176,24 @@ public class ServersActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void saveServerList(){
+		StringBuffer sb = new StringBuffer();
+		for (String s:serverList){
+			sb.append(s);
+			sb.append(";");
+		}
+		
+		if (sb.length()>0){
+			//Remove last ";"
+			sb.deleteCharAt(sb.length()-1);
+		}
+		
+		Editor editor = settings.edit();
+		
+		editor.putString("servers", sb.toString());
+		editor.commit();
+	
 	}
 }
