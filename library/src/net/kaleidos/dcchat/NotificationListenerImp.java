@@ -33,7 +33,7 @@ public class NotificationListenerImp implements NotificationListener {
 
 	@Override
 	public void userDisconnected(String userSid) {
-		// TODO Auto-generated method stub
+		System.out.println("Disconnected: " + userSid);
 	}
 
 }

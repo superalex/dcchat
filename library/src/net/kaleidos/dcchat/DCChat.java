@@ -83,19 +83,22 @@ public class DCChat {
 				} else if (action.equals("STA") && context.equals("I")) {
 					// Info Status code - Error messages
 					receiveError(text);
+				} else if (action.contains("QUI")){
+					receiveQuit(text);
 				}
-				//TODO: disconected users
+				
 			}
 		}
 	}
 
 	public void sendDirectMessage(String userSid, String text) throws IOException {
-		String message = "DMSG "+ this.ssid + " " + userSid + " " + prepareText(text)+" PM" + this.ssid + "\n";
+		String message = String.format("DMSG %s %s %s PM%s\n", 
+			this.ssid, userSid, prepareText(text), this.ssid);
 		os.writeBytes(message);		
 	}
 
-	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {		
-		String message = "BMSG "+ this.ssid + " " + prepareText(text);
+	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {				
+		String message = String.format("BMSG %s %s", this.ssid,  prepareText(text));
 		if (isMe) {
 			message += " ME1"; 
 		}
@@ -118,9 +121,8 @@ public class DCChat {
 	}
 	
 	private String prepareText(String text) {
-		text = text.replaceAll(" ", "\\\\s");
-		text = text.replaceAll("\n", "\\\\n");
-		text = text.replace("\\", "\\\\");
+		text = text.replace(" ", "\\s");
+		text = text.replace("\n", "\\\\n");
 		return text;
 	}
 
@@ -156,10 +158,11 @@ public class DCChat {
 		this.cid = Base32.encode(digest);
 
 		// TODO: extra params
-		// TODO: build better this string
-		os.writeBytes("BINF " + this.ssid
-				+ " SS9999999 SL10 NI" + this.username
-				+ " ID" + this.cid + " PD" + this.pid + "\n");
+		String extraParams = "SS9999999 SL10";
+		String binfCommand = String.format("BINF %s %s NI%s ID%s PD%s\n", 
+			this.ssid, extraParams, this.username, this.cid, this.pid);
+		
+		os.writeBytes(binfCommand);
 	}
 
 	private void receiveBroadcastMessage(String input) {
@@ -193,5 +196,10 @@ public class DCChat {
 		// Info Status code - Error messages
 		String text = this.cleanText(input.split(" ")[1]);
 		notificationListener.error(text);
+	}
+	
+	private void receiveQuit(String input) {
+		String userSid = input.substring(0, 4);
+		notificationListener.userDisconnected(userSid);
 	}
 }
