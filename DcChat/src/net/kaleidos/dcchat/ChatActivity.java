@@ -169,12 +169,20 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	}
 	
 	private void selectChat(int position){
-		String chatName = chatNames.get(position);
-		selectChat(chatName);
+		if (position > 0) {
+			String chatName = chatNames.get(position);
+			selectChat(users.get(chatName));
+		} else {
+			selectChat(PUBLIC_CHAT);
+		}
 	}
 	
 	private void selectChat(String sid){
-		ChatActivity.this.setTitle(getNick(sid));
+		if (!PUBLIC_CHAT.equals(sid)){
+			ChatActivity.this.setTitle(getNick(sid));
+		} else {
+			ChatActivity.this.setTitle(PUBLIC_CHAT);
+		}
 		
 		chatList.setVisibility(View.INVISIBLE);
 		userList.setVisibility(View.INVISIBLE);
