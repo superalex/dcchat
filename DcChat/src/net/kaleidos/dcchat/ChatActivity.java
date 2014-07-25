@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	ListView userList;
 	ScrollView textScroll;
 	TextView textView;
+	TextView userMessage;
+	Button userMessageOk;
 	
 
 	@Override
@@ -52,6 +55,8 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		//Data.dcChatAsyncTask.addMessageable(this);
 		
 		textView = (TextView) findViewById(R.id.textList);
+		userMessage = (TextView) findViewById(R.id.userMessage);
+		userMessageOk = (Button) findViewById(R.id.userMessageOk);
 		
 		
 		dcChatAsyncTask = new DcChatAsyncTask(this);
@@ -150,6 +155,8 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		ChatActivity.this.setTitle("Chat list");
 		textScroll.setVisibility(View.INVISIBLE);
 		userList.setVisibility(View.INVISIBLE);
+		userMessage.setVisibility(View.INVISIBLE);
+		userMessageOk.setVisibility(View.INVISIBLE);
 		
 		
 		chatNames.clear();
@@ -187,11 +194,19 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		chatList.setVisibility(View.INVISIBLE);
 		userList.setVisibility(View.INVISIBLE);
 		
+		
+		
+		
 		textView.setText("");
 				
 		for (String s: privateMessages.get(sid)){
 			textView.append(s+"\n");
 		}
+		
+		
+		userMessage.setVisibility(View.VISIBLE);
+		userMessageOk.setVisibility(View.VISIBLE);
+		
 		
 		textScroll.setVisibility(View.VISIBLE);
 		
@@ -207,6 +222,8 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		ChatActivity.this.setTitle("All users");
 		textScroll.setVisibility(View.INVISIBLE);
 		chatList.setVisibility(View.INVISIBLE);
+		userMessage.setVisibility(View.INVISIBLE);
+		userMessageOk.setVisibility(View.INVISIBLE);
 		
 		userNames.clear();
 		for (String s:users.keySet()){			

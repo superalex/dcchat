@@ -12,7 +12,7 @@
         android:id="@+id/chatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/text1"
+        android:layout_above="@+id/userMessage"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
          >
@@ -22,7 +22,7 @@
         android:id="@+id/userList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/text1"
+        android:layout_above="@+id/userMessage"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
          >
@@ -32,7 +32,7 @@
         android:id="@+id/textScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/text1"
+        android:layout_above="@+id/userMessage"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="#F0F0F0" >
@@ -55,18 +55,18 @@
     
     
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/userMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/button1"
-        android:layout_toLeftOf="@+id/button1"
+        android:layout_alignTop="@+id/userMessageOk"
+        android:layout_toLeftOf="@+id/userMessageOk"
         android:gravity="center_vertical"
         android:paddingLeft="5dp" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/userMessageOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
