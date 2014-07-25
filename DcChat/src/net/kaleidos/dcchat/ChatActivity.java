@@ -225,6 +225,10 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		
 		
 		textView.setText("");
+		
+		if (!privateMessages.containsKey(sid)){
+			privateMessages.put(sid, new ArrayList<String>());
+		}
 				
 		for (String s: privateMessages.get(sid)){
 			textView.append(s+"\n");
@@ -266,10 +270,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	
 	private void selectUser(int position){
 		String userName = userNames.get(position);
-		String sId = users.get(userName);
-		if (!privateMessages.containsKey(sId)){
-			privateMessages.put(sId, new ArrayList<String>());
-		}
+		String sId = users.get(userName);		
 		selectChat(sId);
 	}
 	
