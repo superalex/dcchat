@@ -12,6 +12,8 @@ import android.util.Log;
 
 public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
 	
+	private static final String ADCS="adcs";
+	
 
 
 
@@ -21,7 +23,7 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
 	String pid;
 	String host;
 	int port = 2783;
-	String protocol;
+	String protocol="adcs";
 
     public DcChatAsyncTask(Messageable messageable, String pid, String server) {
 		super();
@@ -58,8 +60,8 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
     		listener = new DccNotificationListener();
     		listener.addMessageable(messageable);
     		
-    		
-			this.dcchat = new DCChat("betatester2000", host, port, false, Base32.decode(pid), listener);
+    		    		
+			this.dcchat = new DCChat("betatester2000", host, port, !ADCS.equals(protocol), Base32.decode(pid), listener);
 			this.dcchat.connect();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
