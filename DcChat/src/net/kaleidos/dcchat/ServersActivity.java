@@ -28,161 +28,190 @@ public class ServersActivity extends ActionBarActivity {
 	private ArrayAdapter<String> serverListAdapter;
 	private SharedPreferences settings;
 
-	
-
+	String userName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_servers);
-		
-		
-		
-		
+
 		this.setTitle((String) getResources().getText(R.string.select_server));
-		
-		serverList = new ArrayList<String>();  
-		
+
+		serverList = new ArrayList<String>();
+
 		final ListView listview = (ListView) findViewById(R.id.serverList);
-	    
+
 		settings = getSharedPreferences(PREFS_NAME, 0);
-	    String serversString = settings.getString("servers", "");
-		
-		if (serversString.equals("")){
+
+		userName = settings.getString("username",
+				"user" + System.currentTimeMillis());
+
+		String serversString = settings.getString("servers", "");
+
+		if (serversString.equals("")) {
 			serversString = DEFAULT_SERVER_LIST;
-			serverList.addAll( Arrays.asList(serversString.split(";")) );
-			serverList.add((String) getResources().getText(R.string.new_server));
+			serverList.addAll(Arrays.asList(serversString.split(";")));
+			serverList
+					.add((String) getResources().getText(R.string.new_server));
 		} else {
-			serverList.addAll( Arrays.asList(serversString.split(";")) );
+			serverList.addAll(Arrays.asList(serversString.split(";")));
 		}
-		
-		
-		serverListAdapter = new ArrayAdapter<String>(this, R.layout.server_row, serverList);
-	    listview.setAdapter( serverListAdapter ); 
-	    
-	    listview.setOnItemClickListener(new OnItemClickListener() {
+
+		serverListAdapter = new ArrayAdapter<String>(this, R.layout.server_row,
+				serverList);
+		listview.setAdapter(serverListAdapter);
+
+		listview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentView, View childView, int position, long id) {
-				
+			public void onItemClick(AdapterView<?> parentView, View childView,
+					int position, long id) {
+
 				selectServer(position);
 			}
 		});
-	    listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+		listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parentView, View childView, int position, long id) {
+			public boolean onItemLongClick(AdapterView<?> parentView,
+					View childView, int position, long id) {
 				// TODO Auto-generated method stub
 				removeServerDialog(position);
 				return true;
 			}
 		});
-	    
-	    
+
 	}
-	
-	public void removeServerDialog(final int position){
-		if (position != serverList.size() -1) {
+
+	public void removeServerDialog(final int position) {
+		if (position != serverList.size() - 1) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 			alert.setTitle("Delete server");
 			alert.setMessage("Are you sure?");
-			
 
-			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {			  
-				removeServer(position);
-			  }
-			});
+			alert.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							removeServer(position);
+						}
+					});
 
-			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int whichButton) {
-			    // Canceled.
-			  }
-			});
-			
+			alert.setNegativeButton("Cancel",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							// Canceled.
+						}
+					});
+
 			alert.show();
 		}
 	}
-	
-	
-	
-	public void selectServer(int position){
-	
-		
-		if (position == serverList.size() -1) {
-			//Create new server
+
+	private void setUserName() {
+		// Create new server
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		alert.setTitle("Set your user name");
+		alert.setMessage("User name");
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		alert.setView(input);
+		input.setText(userName);
+
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String value = input.getText().toString();
+				userName = value;
+				Editor editor = settings.edit();
+
+				editor.putString("username", userName);
+				editor.commit();
+			}
+		});
+
+		alert.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Canceled.
+					}
+				});
+
+		alert.show();
+
+	}
+
+	public void selectServer(int position) {
+
+		if (position == serverList.size() - 1) {
+			// Create new server
 			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 			alert.setTitle("Create new server");
 			alert.setMessage("Server address");
 
-			// Set an EditText view to get user input 
+			// Set an EditText view to get user input
 			final EditText input = new EditText(this);
 			alert.setView(input);
 
-			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-			  String value = input.getText().toString();
-			  createServer(value);
-			  }
-			});
+			alert.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							String value = input.getText().toString();
+							createServer(value);
+						}
+					});
 
-			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int whichButton) {
-			    // Canceled.
-			  }
-			});
+			alert.setNegativeButton("Cancel",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							// Canceled.
+						}
+					});
 
 			alert.show();
-			
+
 		} else {
-			//Connect to server
+			// Connect to server
 			connectToServer(position);
 		}
-		
-		
+
 	}
-	
-	private void connectToServer(int position){
-		
-		if (position != serverList.size() -1) {
+
+	private void connectToServer(int position) {
+
+		if (position != serverList.size() - 1) {
 			String server = serverList.get(position);
-			
-			
-			//dcChatAsyncTask = new DcChatAsyncTask();
-			//Data.dcChatAsyncTask = dcChatAsyncTask;
-			//dcChatAsyncTask.execute("");
-			
-			
-			
 			Intent intent = new Intent(this, ChatActivity.class);
-			
+			intent.putExtra("server", server);
+
 			ServersActivity.this.startActivity(intent);
-			//intent.putExtra("dcChatAsyncTask", dcChatAsyncTask);
-			
-			
 
 		}
-		
+
 	}
-	
-	private void createServer(String name){
+
+	private void createServer(String name) {
 		serverList.remove(serverList.size() - 1);
-		serverList.add(name);		
+		serverList.add(name);
 		serverList.add((String) getResources().getText(R.string.new_server));
 		serverListAdapter.notifyDataSetChanged();
-		
+
 		saveServerList();
-		
+
 	}
-	
-	public void removeServer(int position){
-		if (position != serverList.size() -1) {
+
+	public void removeServer(int position) {
+		if (position != serverList.size() - 1) {
 			serverList.remove(position);
 			serverListAdapter.notifyDataSetChanged();
 			saveServerList();
-		}	
+		}
 	}
 
 	@Override
@@ -199,27 +228,28 @@ public class ServersActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			setUserName();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void saveServerList(){
+
+	private void saveServerList() {
 		StringBuffer sb = new StringBuffer();
-		for (String s:serverList){
+		for (String s : serverList) {
 			sb.append(s);
 			sb.append(";");
 		}
-		
-		if (sb.length()>0){
-			//Remove last ";"
-			sb.deleteCharAt(sb.length()-1);
+
+		if (sb.length() > 0) {
+			// Remove last ";"
+			sb.deleteCharAt(sb.length() - 1);
 		}
-		
+
 		Editor editor = settings.edit();
-		
+
 		editor.putString("servers", sb.toString());
 		editor.commit();
-	
+
 	}
 }
