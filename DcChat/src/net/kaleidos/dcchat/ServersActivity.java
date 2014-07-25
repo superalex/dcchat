@@ -23,7 +23,7 @@ import android.widget.ListView;
 
 public class ServersActivity extends ActionBarActivity {
 	public static final String PREFS_NAME = "DcChatPreferences";
-	private static final String DEFAULT_SERVER_LIST = "adcs://dc.p2plibre.es:2780;adcs://dc.ekparty.org;";
+	private static final String DEFAULT_SERVER_LIST = "adcs://dc.p2plibre.es:2780;adc://dc.ekparty.org:2783;";
 	private ArrayList<String> serverList;
 	private ArrayAdapter<String> serverListAdapter;
 	private SharedPreferences settings;
