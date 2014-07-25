@@ -3,8 +3,11 @@ package net.kaleidos.dcchat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.kaleidos.dc_chat.R;
+import net.kaleidos.dcchat.async.DcChatAsyncTask;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ public class ServersActivity extends ActionBarActivity {
 	private ArrayList<String> serverList;
 	private ArrayAdapter<String> serverListAdapter;
 	private SharedPreferences settings;
+	private DcChatAsyncTask dcChatAsyncTask;
 
 	
 
@@ -136,8 +140,27 @@ public class ServersActivity extends ActionBarActivity {
 			
 		} else {
 			//Connect to server
+			connectToServer(position);
 		}
 		
+		
+	}
+	
+	private void connectToServer(int position){
+		
+		if (position != serverList.size() -1) {
+			String server = serverList.get(position);
+			dcChatAsyncTask = new DcChatAsyncTask();
+			dcChatAsyncTask.execute("");
+			
+			
+			
+			Intent intent = new Intent(this, TalkListActivity.class);
+			//intent.putExtra("dcChatAsyncTask", dcChatAsyncTask);
+			
+			
+
+		}
 		
 	}
 	
