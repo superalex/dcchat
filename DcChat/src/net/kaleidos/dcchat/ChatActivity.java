@@ -404,7 +404,9 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
     {
         super.onDestroy();
         Toast.makeText(getApplicationContext(),"Disconecting from server...", Toast.LENGTH_SHORT).show();
-        dcChatAsyncTask.disconnect();
+        try{
+        	dcChatAsyncTask.disconnect();
+        } catch (Exception e){}
         
     }
 }

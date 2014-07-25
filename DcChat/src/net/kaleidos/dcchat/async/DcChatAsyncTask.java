@@ -21,14 +21,25 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
 	String pid;
 	String host;
 	int port = 2783;
-	
+	String protocol;
 
     public DcChatAsyncTask(Messageable messageable, String pid, String server) {
 		super();
 		this.messageable = messageable;
 		this.pid = pid;
 		
-		String[] s = server.split(":");
+		String[] s0 = server.split("://");
+		String s1;
+		
+		if (s0.length == 2){
+			protocol = s0[0];
+			s1 = s0[1];
+		} else {
+			s1 = s0[0];
+		}
+		
+		String[] s = s1.split(":");
+		
 		
 		this.host = s[0];
 		
