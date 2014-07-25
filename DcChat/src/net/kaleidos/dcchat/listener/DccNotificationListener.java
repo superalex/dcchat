@@ -22,7 +22,6 @@ public class DccNotificationListener implements NotificationListener {
 
 	@Override
 	public void directMessageReceived(Message message) {
-		// TODO Auto-generated method stub
 		for (Messageable messageable:messageables){
 			messageable.receiveDirectMessage(message);
 		}
@@ -31,7 +30,10 @@ public class DccNotificationListener implements NotificationListener {
 
 	@Override
 	public void error(String error) {
-		// TODO Auto-generated method stub
+		Log.d("DccNotificationListener", "Received error from server: "+error);
+		for (Messageable messageable:messageables){
+			messageable.receiveError(error);
+		}
 
 	}
 

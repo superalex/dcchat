@@ -189,6 +189,7 @@ public class ServersActivity extends ActionBarActivity {
 			String server = serverList.get(position);
 			Intent intent = new Intent(this, ChatActivity.class);
 			intent.putExtra("server", server);
+			intent.putExtra("username", userName);
 
 			ServersActivity.this.startActivity(intent);
 

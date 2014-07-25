@@ -24,11 +24,13 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
 	String host;
 	int port = 2783;
 	String protocol="adcs";
+	String userName;
 
-    public DcChatAsyncTask(Messageable messageable, String pid, String server) {
+    public DcChatAsyncTask(Messageable messageable, String pid, String server, String userName) {
 		super();
 		this.messageable = messageable;
 		this.pid = pid;
+		this.userName = userName;
 		
 		String[] s0 = server.split("://");
 		String s1;
@@ -61,7 +63,7 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
     		listener.addMessageable(messageable);
     		
     		    		
-			this.dcchat = new DCChat("betatester2000", host, port, !ADCS.equals(protocol), Base32.decode(pid), listener);
+			this.dcchat = new DCChat(userName, host, port, !ADCS.equals(protocol), Base32.decode(pid), listener);
 			this.dcchat.connect();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

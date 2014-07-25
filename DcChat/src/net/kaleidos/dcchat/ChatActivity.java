@@ -52,6 +52,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	Button userMessageOk;
 	
 	String server;
+	String userName;
 	
 
 	@Override
@@ -62,6 +63,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		Bundle extras = getIntent().getExtras();
 		
 		server = extras.getString("server");
+		userName = extras.getString("username");
 		
 		
 		
@@ -86,7 +88,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		});
 		
 		
-		dcChatAsyncTask = new DcChatAsyncTask(this, getPid(), server);
+		dcChatAsyncTask = new DcChatAsyncTask(this, getPid(), server, userName);
 		dcChatAsyncTask.execute("");
 		
 		
@@ -410,4 +412,19 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
         } catch (Exception e){}
         
     }
+
+	@Override
+	public void receiveError(final String error) {
+		
+		
+		runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	Toast.makeText(getApplicationContext(),"ERROR: "+error, Toast.LENGTH_LONG).show();
+            }
+        });
+		
+		
+		
+	}
 }

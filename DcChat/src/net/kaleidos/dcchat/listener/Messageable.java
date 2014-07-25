@@ -7,4 +7,5 @@ public interface Messageable {
 	public void receiveDirectMessage(Message message);
 	public void userConnected(String userSid, String userNick);
 	public void userDisconnected(String userSid);
+	public void receiveError(String error);
 }
