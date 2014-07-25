@@ -3,6 +3,8 @@ package net.kaleidos.dcchat.listener;
 import net.kaleidos.dcchat.Message;
 
 public interface Messageable {
-	public void receiveMessage(Message message);
-
+	public void receiveBroadcastMessage(Message message);
+	public void receiveDirectMessage(Message message);
+	public void userConnected(String userSid, String userNick);
+	public void userDisconnected(String userSid);
 }
