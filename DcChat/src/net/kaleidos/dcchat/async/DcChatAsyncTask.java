@@ -2,6 +2,7 @@ package net.kaleidos.dcchat.async;
 
 import java.util.Random;
 
+import net.kaleidos.dcchat.Base32;
 import net.kaleidos.dcchat.DCChat;
 import net.kaleidos.dcchat.listener.DccNotificationListener;
 import net.kaleidos.dcchat.listener.Messageable;
@@ -15,11 +16,13 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
 	DCChat dcchat;
 	DccNotificationListener listener;
 	Messageable messageable;
+	String pid;
 	
 
-    public DcChatAsyncTask(Messageable messageable) {
+    public DcChatAsyncTask(Messageable messageable, String pid) {
 		super();
 		this.messageable = messageable;
+		this.pid = pid;
 	}
     
     public DCChat getDcchat() {
@@ -33,12 +36,7 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
     		listener.addMessageable(messageable);
     		
     		
-    		
-    		byte[] unencodedPid = new byte[24];
-			new Random().nextBytes(unencodedPid);
-    		
-    		
-			this.dcchat = new DCChat("betatester2000", "dc.ekparty.org", 2783, false, unencodedPid, listener);
+			this.dcchat = new DCChat("betatester2000", "dc.ekparty.org", 2783, false, Base32.decode(pid), listener);
 			this.dcchat.connect();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

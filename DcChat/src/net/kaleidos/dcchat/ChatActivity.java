@@ -3,10 +3,13 @@ package net.kaleidos.dcchat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.kaleidos.dcchat.async.DcChatAsyncTask;
 import net.kaleidos.dcchat.listener.Messageable;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -28,6 +31,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ChatActivity extends ActionBarActivity implements Messageable {
 	private static final String PUBLIC_CHAT = "Public Chat";
+	
+	private SharedPreferences settings;
 	
 	DcChatAsyncTask dcChatAsyncTask;	
 	ConcurrentHashMap<String, ArrayList<String>> privateMessages = new ConcurrentHashMap<String, ArrayList<String>>();
@@ -52,6 +57,8 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		
+		settings = getSharedPreferences(ServersActivity.PREFS_NAME, 0);
+		
 		setTitle(PUBLIC_CHAT);
 		
 		//Data.dcChatAsyncTask.addMessageable(this);
@@ -70,7 +77,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		});
 		
 		
-		dcChatAsyncTask = new DcChatAsyncTask(this);
+		dcChatAsyncTask = new DcChatAsyncTask(this, getPid());
 		//Data.dcChatAsyncTask = dcChatAsyncTask;
 		dcChatAsyncTask.execute("");
 		
@@ -336,7 +343,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		userMessage.setText("");
 		try{
 			if (currentChat == PUBLIC_CHAT) {
-				dcChatAsyncTask.getDcchat().sendBroadcastMessage(msg, true);
+				dcChatAsyncTask.getDcchat().sendBroadcastMessage(msg, false);
 			} else {
 				dcChatAsyncTask.getDcchat().sendDirectMessage(currentChat, msg);
 			}
@@ -359,5 +366,25 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		}
 		return nick;
 		
+	}
+	
+	private String getPid(){
+		String pid = settings.getString("pid", "");
+		if ("".equals(pid)){
+			pid = generatePid();
+			Editor editor = settings.edit();
+			
+			editor.putString("servers", pid);
+			editor.commit();
+		}
+		return pid;
+		
+	}
+	
+	
+	private String generatePid(){
+		byte[] unencodedPid = new byte[24];
+		new Random().nextBytes(unencodedPid);
+		return Base32.encode(unencodedPid);
 	}
 }
