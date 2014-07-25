@@ -12,8 +12,7 @@ public class DccNotificationListener implements NotificationListener {
 
 	@Override
 	public void broadcastMessageReceived(Message message) {
-		// TODO Auto-generated method stub
-		Log.d("DccNotificationListener", message.getText());
+		//Log.d("DccNotificationListener", message.getText());
 		
 		for (Messageable messageable:messageables){
 			messageable.receiveBroadcastMessage(message);

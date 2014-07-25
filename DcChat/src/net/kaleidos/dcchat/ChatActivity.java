@@ -51,17 +51,26 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	EditText userMessage;
 	Button userMessageOk;
 	
+	String server;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		
+		Bundle extras = getIntent().getExtras();
+		
+		server = extras.getString("server");
+		
+		
+		
 		setContentView(R.layout.activity_chat);
 		
 		settings = getSharedPreferences(ServersActivity.PREFS_NAME, 0);
 		
 		setTitle(PUBLIC_CHAT);
 		
-		//Data.dcChatAsyncTask.addMessageable(this);
 		
 		textView = (TextView) findViewById(R.id.textList);
 		userMessage = (EditText) findViewById(R.id.userMessage);
@@ -77,9 +86,9 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		});
 		
 		
-		dcChatAsyncTask = new DcChatAsyncTask(this, getPid());
-		//Data.dcChatAsyncTask = dcChatAsyncTask;
+		dcChatAsyncTask = new DcChatAsyncTask(this, getPid(), server);
 		dcChatAsyncTask.execute("");
+		
 		
 		
 		chatList = (ListView) findViewById(R.id.chatList);
@@ -374,7 +383,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 			pid = generatePid();
 			Editor editor = settings.edit();
 			
-			editor.putString("servers", pid);
+			editor.putString("pid", pid);
 			editor.commit();
 		}
 		return pid;
@@ -387,4 +396,15 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		new Random().nextBytes(unencodedPid);
 		return Base32.encode(unencodedPid);
 	}
+	
+	
+	
+	@Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        Toast.makeText(getApplicationContext(),"Disconecting from server...", Toast.LENGTH_SHORT).show();
+        dcChatAsyncTask.disconnect();
+        
+    }
 }
