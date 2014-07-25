@@ -15,7 +15,7 @@ public class Main {
 			
 			try {
 				//this.dcchat = new DCChat("superalex", "dc.p2plibre.es", 2780, true, nl);
-				this.dcchat = new DCChat("betatester", "dc.ekparty.org", 2783, false, nl);
+				this.dcchat = new DCChat("betatester2", "dc.ekparty.org", 2783, false, nl);
 				System.out.println("INIT" +  this.dcchat);				
 				// this.dcchat = new DCChat("superalex", "dc.ekparty.org", 2783, false, nl);
 				this.dcchat.connect();

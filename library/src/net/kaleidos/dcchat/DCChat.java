@@ -35,38 +35,6 @@ public class DCChat {
 	// String>();
 	private NotificationListener notificationListener;
 
-	public void sendDirectMessage(String userSid, String text) throws IOException {
-		String message = "DMSG "+ this.ssid + " " + userSid + " " + prepareText(text)+" PM" + this.ssid + "\n";
-		System.out.println("sendDirectMessage: " +  message);
-		os.writeBytes(message);		
-	}
-
-	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {		
-		String message = "BMSG "+ this.ssid + " " + prepareText(text);
-		if (isMe) {
-			message += " ME1"; 
-		}
-		message += "\n";
-		os.writeBytes(message);
-	}
-
-	public void disconnect() throws IOException {
-		this.connected = false;
-		os.close();
-		is.close();
-		socket.close();
-	}
-
-	private String cleanText(String text) {
-		// TODO Clean more
-		return text.replaceAll("\\\\s", " ");
-	}
-	
-	private String prepareText(String text) {
-		// TODO prepare more
-		return text.replaceAll(" ", "\\\\s");
-	}
-
 	public DCChat(String username, String host, int port, boolean useSSL,
 			NotificationListener notificationListener)
 			throws UnknownHostException, IOException, NoSuchAlgorithmException {
@@ -105,6 +73,9 @@ public class DCChat {
 					if (message.contains(" NI")) {
 						receiveUserNick(text);
 					}
+				} else if (action.equals("MSG") && context.equals("E")) {
+					// Direct message
+					receiveDirectMessage(text);					
 				} else if (action.equals("STA") && context.equals("I")) {
 					// Info Status code - Error messages
 					receiveError(text);
@@ -113,6 +84,42 @@ public class DCChat {
 			}
 		}
 	}
+
+	public void sendDirectMessage(String userSid, String text) throws IOException {
+		String message = "DMSG "+ this.ssid + " " + userSid + " " + prepareText(text)+" PM" + this.ssid + "\n";
+		os.writeBytes(message);		
+	}
+
+	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {		
+		String message = "BMSG "+ this.ssid + " " + prepareText(text);
+		if (isMe) {
+			message += " ME1"; 
+		}
+		message += "\n";
+		os.writeBytes(message);
+	}
+
+	public void disconnect() throws IOException {
+		this.connected = false;
+		os.close();
+		is.close();
+		socket.close();
+	}
+
+	private String cleanText(String text) {
+		// TODO Clean more
+		text = text.replaceAll("\\\\s", " ");
+		text = text.replaceAll("\\\\n", "\n");
+		return text;
+	}
+	
+	private String prepareText(String text) {
+		// TODO prepare more
+		text = text.replaceAll(" ", "\\\\s");
+		text = text.replaceAll("\n", "\\\\n");
+		return text;
+	}
+
 
 	private void initializeCommunication(boolean useSSL, String host, int port)
 			throws UnknownHostException, IOException {
@@ -150,7 +157,7 @@ public class DCChat {
 		// TODO: extra params
 		// TODO: build better this string
 		os.writeBytes("BINF " + this.ssid
-				+ " SS6666666666666666666666666 SL10 NI" + this.username
+				+ " SS9999999 SL10 NI" + this.username
 				+ " ID" + this.cid + " PD" + this.pid + "\n");
 		// os.writeBytes("BINF "+ this.ssid +" ID"+cid+" PD"+pid+"\n");
 	}
@@ -175,6 +182,13 @@ public class DCChat {
 		notificationListener.userConnected(userSid, userNick);
 	}
 
+	private void receiveDirectMessage(String input) {
+		String userSid = input.substring(5, 9);
+		String text = input.split("\\ ")[2];
+		Message directMessage = new Message(userSid, cleanText(text));
+		notificationListener.directMessageReceived(directMessage);
+	}
+	
 	private void receiveError(String input) {
 		// Info Status code - Error messages
 		String text = this.cleanText(input.split(" ")[1]);
