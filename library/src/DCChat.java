@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.Random;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
@@ -31,41 +31,7 @@ public class DCChat {
 	private Socket socket;
 	private DataOutputStream os;
 	private BufferedReader is;
-	// private HashMap<String, String> nicksBySid = new HashMap<String,
-	// String>();
 	private NotificationListener notificationListener;
-
-	public void sendDirectMessage(String userSid, String text) throws IOException {
-		String message = "DMSG "+ this.ssid + " " + userSid + " " + prepareText(text)+" PM" + this.ssid + "\n";
-		System.out.println("sendDirectMessage: " +  message);
-		os.writeBytes(message);		
-	}
-
-	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {		
-		String message = "BMSG "+ this.ssid + " " + prepareText(text);
-		if (isMe) {
-			message += " ME1"; 
-		}
-		message += "\n";
-		os.writeBytes(message);
-	}
-
-	public void disconnect() throws IOException {
-		this.connected = false;
-		os.close();
-		is.close();
-		socket.close();
-	}
-
-	private String cleanText(String text) {
-		// TODO Clean more
-		return text.replaceAll("\\\\s", " ");
-	}
-	
-	private String prepareText(String text) {
-		// TODO prepare more
-		return text.replaceAll(" ", "\\\\s");
-	}
 
 	public DCChat(String username, String host, int port, boolean useSSL,
 			NotificationListener notificationListener)
@@ -116,6 +82,38 @@ public class DCChat {
 		}
 	}
 
+	public void sendDirectMessage(String userSid, String text) throws IOException {
+		String message = "DMSG "+ this.ssid + " " + userSid + " " + prepareText(text)+" PM" + this.ssid + "\n";
+		os.writeBytes(message);		
+	}
+
+	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {		
+		String message = "BMSG "+ this.ssid + " " + prepareText(text);
+		if (isMe) {
+			message += " ME1"; 
+		}
+		message += "\n";
+		os.writeBytes(message);
+	}
+
+	public void disconnect() throws IOException {
+		this.connected = false;
+		os.close();
+		is.close();
+		socket.close();
+	}
+
+	private String cleanText(String text) {
+		// TODO Clean more
+		return text.replaceAll("\\\\s", " ");
+	}
+	
+	private String prepareText(String text) {
+		// TODO prepare more
+		return text.replaceAll(" ", "\\\\s");
+	}
+
+	
 	private void initializeCommunication(boolean useSSL, String host, int port)
 			throws UnknownHostException, IOException {
 		// Preparing the sockets
@@ -140,9 +138,9 @@ public class DCChat {
 		this.ssid = input;
 
 		// PID and CID Generation
-		// TODO: randomize
-		byte[] unencodedPid = new byte[] { 2, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
-				3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4 };
+		byte[] unencodedPid = new byte[24];
+		new Random().nextBytes(unencodedPid);
+		
 		this.pid = Base32.encode(unencodedPid);
 		Tiger tt = new Tiger();
 		tt.update(unencodedPid, 0, unencodedPid.length);
