@@ -59,7 +59,7 @@ public class DCChat {
 				String action = message.substring(1, 4);
 				String text = message.substring(5);
 
-				System.out.println(message);
+				//System.out.println(message);
 				if (action.equals("SID") && context.equals("I")) {
 					receiveSID(text);
 
