@@ -62,6 +62,11 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
     		listener = new DccNotificationListener();
     		listener.addMessageable(messageable);
     		
+    		
+    		Log.d("Connection host", host);
+    		Log.d("Connection port", ""+port);
+    		Log.d("Connection ssl", ""+ADCS.equals(protocol));
+    		
     		    		
 			this.dcchat = new DCChat(userName, host, port, ADCS.equals(protocol), Base32.decode(pid), listener);
 			this.dcchat.connect();
