@@ -14,7 +14,8 @@ public class NotificationListenerImp implements NotificationListener {
 
 	@Override
 	public void directMessageReceived(Message message) {
-		// TODO Auto-generated method stub
+		String userNick = nicksBySid.get(message.getUserSid());
+		System.out.println("Privado " + userNick + ": " + message.getText());
 	}
 
 	@Override

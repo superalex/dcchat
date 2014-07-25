@@ -105,11 +105,13 @@ public class DCChat {
 					if (message.contains(" NI")) {
 						receiveUserNick(text);
 					}
+				} else if (action.equals("MSG") && context.equals("E")) {
+					// Direct message
+					receiveDirectMessage(text);
 				} else if (action.equals("STA") && context.equals("I")) {
 					// Info Status code - Error messages
 					receiveError(text);
 				}
-				//TODO: disconected users
 			}
 		}
 	}
@@ -139,7 +141,7 @@ public class DCChat {
 
 		// PID and CID Generation
 		// TODO: randomize
-		byte[] unencodedPid = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
+		byte[] unencodedPid = new byte[] { 2, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2,
 				3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4 };
 		this.pid = Base32.encode(unencodedPid);
 		Tiger tt = new Tiger();
@@ -179,5 +181,12 @@ public class DCChat {
 		// Info Status code - Error messages
 		String text = this.cleanText(input.split(" ")[1]);
 		notificationListener.error(text);
+	}
+
+	private void receiveDirectMessage(String input) {
+		String userSid = input.substring(5, 9);
+		String text = input.split("\\ ")[2];
+		Message directMessage = new Message(userSid, cleanText(text));
+		notificationListener.directMessageReceived(directMessage);
 	}
 }
