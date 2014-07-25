@@ -358,6 +358,31 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 				dcChatAsyncTask.getDcchat().sendBroadcastMessage(msg, false);
 			} else {
 				dcChatAsyncTask.getDcchat().sendDirectMessage(currentChat, msg);
+				
+				
+				if (!privateMessages.containsKey(currentChat)){
+					privateMessages.put(currentChat, new ArrayList<String>());
+				}
+				
+				final String text = "<"+userName+"> "+msg;
+				
+				privateMessages.get(currentChat).add(text);
+				
+				runOnUiThread(new Runnable() {
+		            @Override
+		            public void run() {
+		            	textView.append(text+"\n");
+		            }
+		        });
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 		} catch (Exception e){
 			e.printStackTrace();
