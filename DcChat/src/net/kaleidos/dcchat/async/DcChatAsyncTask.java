@@ -63,7 +63,7 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
     		listener.addMessageable(messageable);
     		
     		    		
-			this.dcchat = new DCChat(userName, host, port, !ADCS.equals(protocol), Base32.decode(pid), listener);
+			this.dcchat = new DCChat(userName, host, port, ADCS.equals(protocol), Base32.decode(pid), listener);
 			this.dcchat.connect();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
