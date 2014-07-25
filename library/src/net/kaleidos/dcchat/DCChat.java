@@ -186,7 +186,7 @@ public class DCChat {
 	}
 
 	private void receiveDirectMessage(String input) {
-		String userSid = input.substring(5, 9);
+		String userSid = input.substring(0, 4);
 		String text = input.split("\\ ")[2];
 		Message directMessage = new Message(userSid, cleanText(text));
 		notificationListener.directMessageReceived(directMessage);

@@ -44,7 +44,7 @@ public class Main {
 		m.th.start();
 		Thread.sleep(3000);
 		//m.th.sendBroadcastMessage("LIKES CATS", true);
-		m.th.sendDirectMessage("ADAH", "hola Al");
+		m.th.sendDirectMessage("ADQE", "hola Al");
 //		m.th.sendDirectMessage(m.th.dcchat.getSsid(), "test");		
 	}
 }
