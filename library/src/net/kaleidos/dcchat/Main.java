@@ -18,7 +18,7 @@ public class Main {
 				byte[] unencodedPid = new byte[24];
 				new Random().nextBytes(unencodedPid);
 				
-				this.dcchat = new DCChat("superalex", "dc.p2plibre.es", 2780, true, unencodedPid, nl);
+				this.dcchat = new DCChat("superalex3", "dc.p2plibre.es", 2780, true, unencodedPid, nl);
 				//this.dcchat = new DCChat("betatester2", "dc.ekparty.org", 2783, false, unencodedPid, nl);
 				System.out.println("INIT" +  this.dcchat);				
 				// this.dcchat = new DCChat("superalex", "dc.ekparty.org", 2783, false, unencodedPid, nl);
@@ -44,7 +44,7 @@ public class Main {
 		m.th.start();
 		Thread.sleep(3000);
 		//m.th.sendBroadcastMessage("LIKES CATS", true);
-		m.th.sendDirectMessage("ADQE", "hola Al");
+		//m.th.sendDirectMessage("XN65", "hola Al");
 //		m.th.sendDirectMessage(m.th.dcchat.getSsid(), "test");		
 	}
 }

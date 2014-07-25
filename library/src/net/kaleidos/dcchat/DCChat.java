@@ -59,7 +59,7 @@ public class DCChat {
 				String action = message.substring(1, 4);
 				String text = message.substring(5);
 
-				//System.out.println(message);
+				System.out.println(message);
 				if (action.equals("SID") && context.equals("I")) {
 					receiveSID(text);
 
@@ -131,8 +131,8 @@ public class DCChat {
 			throws UnknownHostException, IOException {
 		// Preparing the sockets
 		SocketFactory factory;
-		if (useSSL) {
-			NaiveTrustProvider.setAlwaysTrust(true);
+		NaiveTrustProvider.setAlwaysTrust(true);
+		if (useSSL) {			
 			factory = SSLSocketFactory.getDefault();
 		} else {
 			factory = SocketFactory.getDefault();
