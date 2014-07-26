@@ -72,6 +72,7 @@ public class DcChatAsyncTask extends AsyncTask<String, Void, String> {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			messageable.receiveError(e.getMessage());
 		}
         return "Executed";
     }
