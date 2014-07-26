@@ -10,9 +10,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.kaleidos.dcchat.async.DcChatAsyncTask;
 import net.kaleidos.dcchat.async.SendMessageAsyncTask;
 import net.kaleidos.dcchat.listener.Messageable;
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+@SuppressLint("NewApi")
 public class ChatActivity extends ActionBarActivity implements Messageable {
 	private static final String PUBLIC_CHAT = "Public Chat";
 	
@@ -321,6 +329,18 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		
 	}
 	
+	private void launchNotification(Message message) {		
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.ic_launcher)
+		        .setContentTitle("<"+getNick(message.getUserSid())+">")
+		        .setContentText(message.getText());
+
+		NotificationManager mNotificationManager =
+		    (NotificationManager) getSystemService(ChatActivity.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(666, mBuilder.build());						
+	}
+	
 	@Override
 	public void receiveDirectMessage(final Message message) {
 		
@@ -330,8 +350,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		
 		final String text = "<"+getNick(message.getUserSid())+"> "+message.getText();
 		
-		privateMessages.get(message.getUserSid()).add(text);
-		
+		privateMessages.get(message.getUserSid()).add(text);		
 		
 		if (currentChat.equals(message.getUserSid())) {
 		
@@ -342,6 +361,9 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	            }
 	        });
 		} 
+		else {
+			launchNotification(message);
+		}
 		
 	}
 
