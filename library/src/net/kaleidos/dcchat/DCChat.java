@@ -93,6 +93,7 @@ public class DCChat {
 		os.close();
 		is.close();
 		socket.close();	
+		notificationListener.serverDisconnect();
 	}
 
 	public void sendDirectMessage(String userSid, String text) throws IOException {

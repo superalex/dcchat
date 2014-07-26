@@ -188,7 +188,11 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 			return true;
 		}
 		if (id == R.id.disconnect) {
-			this.finish();
+			Toast.makeText(getApplicationContext(),"Disconnecting from server...", Toast.LENGTH_LONG).show();
+	        		
+	        try{
+	        	dcChatAsyncTask.disconnect();
+	        } catch (Exception e){}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -418,20 +422,11 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		            }
 		        });
 				
-				
-				
-				
-				
-				
-				
-				
-				
 			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-			
-	
+
 	}
 	
 	
@@ -468,22 +463,8 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		return Base32.encode(unencodedPid);
 	}
 	
-	
-	
-	@Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        Toast.makeText(getApplicationContext(),"Disconecting from server...", Toast.LENGTH_SHORT).show();
-        try{
-        	dcChatAsyncTask.disconnect();
-        } catch (Exception e){}
-        
-    }
-
 	@Override
 	public void receiveError(final String error) {
-		
 		
 		runOnUiThread(new Runnable() {
             @Override
@@ -491,8 +472,6 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
             	Toast.makeText(getApplicationContext(),"ERROR: "+error, Toast.LENGTH_LONG).show();
             }
         });
-		
-		
 		
 	}
 	
@@ -504,6 +483,17 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 			//Froma a chat, show chat list
 			listChats();
 		}	
+	}
+
+	@Override
+	public void serverDisconnect() {
+		runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	Toast.makeText(getApplicationContext(),"Server disconnected", Toast.LENGTH_LONG).show();
+            }
+        });
+		this.finish();
 	}
 	
 	

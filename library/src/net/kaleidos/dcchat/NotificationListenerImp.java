@@ -36,4 +36,10 @@ public class NotificationListenerImp implements NotificationListener {
 		System.out.println("Disconnected: " + userSid);
 	}
 
+	@Override
+	public void serverDisconnect() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

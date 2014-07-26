@@ -56,4 +56,11 @@ public class DccNotificationListener implements NotificationListener {
 		messageables.add(messageable);
     }
 
+	@Override
+	public void serverDisconnect() {
+		for (Messageable messageable:messageables){
+			messageable.serverDisconnect();
+		}
+	}
+
 }
