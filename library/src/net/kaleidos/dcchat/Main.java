@@ -43,7 +43,7 @@ public class Main {
 		Main m = new Main();
 		m.th.start();
 		Thread.sleep(3000);
-		//m.th.sendBroadcastMessage("LIKES CATS", true);
+		m.th.sendBroadcastMessage("áñ", true);
 		//m.th.sendDirectMessage("XN65", "hola Al");
 //		m.th.sendDirectMessage(m.th.dcchat.getSsid(), "test");		
 	}

@@ -77,7 +77,7 @@ public class DCChat {
 					if (message.contains(" NI")) {
 						receiveUserNick(text);
 					}
-				} else if (action.equals("MSG") && context.equals("E")) {
+				} else if (action.equals("MSG") && (context.equals("E") || context.equals("D")) ) {
 					// Direct message
 					receiveDirectMessage(text);					
 				} else if (action.equals("STA") && context.equals("I")) {
