@@ -1,25 +1,20 @@
 package net.kaleidos.dcchat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.kaleidos.dcchat.async.DcChatAsyncTask;
 import net.kaleidos.dcchat.async.SendMessageAsyncTask;
 import net.kaleidos.dcchat.listener.Messageable;
 import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -30,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +33,6 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 @SuppressLint("NewApi")
 public class ChatActivity extends ActionBarActivity implements Messageable {
@@ -188,11 +183,24 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 			return true;
 		}
 		if (id == R.id.disconnect) {
-			Toast.makeText(getApplicationContext(),"Disconnecting from server...", Toast.LENGTH_LONG).show();
-	        		
-	        try{
-	        	dcChatAsyncTask.disconnect();
-	        } catch (Exception e){}
+			ProgressDialog.show(this, "Disconnecting", "Disconnecting from server...");
+			
+			// 5 seconds coundowntimer
+			new CountDownTimer(5000, 1000) {
+
+				public void onTick(long millisUntilFinished) {
+
+				}
+
+				public void onFinish() {
+					finish(); // finish Activity
+				}
+			}.start();
+
+			try {
+				dcChatAsyncTask.disconnect();
+			} catch (Exception e) {
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
