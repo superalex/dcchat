@@ -18,6 +18,7 @@ La biblioteca soporta las siguientes funcionalidades:
  - Recepción de mensajes IINF de información del servidor
  - Recepción de mensajes ISTA de errores del servidor
  - Recepción de mensajes QUI de desconexión de usuarios
+ - Desconexión del servidor
 
 La aplicación Android soporta las siguientes funcionalidades:
 -----------------------------------------------
@@ -38,5 +39,6 @@ La aplicación Android soporta las siguientes funcionalidades:
  - Desconexión de un determinado servidor
  - Listado de chats disponibles (chat general y chats directos iniciados con otros usuarios)
  - Listado de usuarios
- - Chat con usuario 
+ - Chat directo con usuario 
  - Notificación de nuevo mensaje directo si se está fuera de la pantalla de chat con ese usuario
+ - Desconexión del servidor
