@@ -11,6 +11,8 @@
     <string name="list_chats">List chats</string>
     <string name="list_users">List users</string>
     
+    <string name="disconnect">Disconnect</string>
+    
 
 </resources>
 

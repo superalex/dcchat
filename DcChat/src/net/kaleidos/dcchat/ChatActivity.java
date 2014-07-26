@@ -2,6 +2,7 @@ package net.kaleidos.dcchat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
@@ -63,6 +64,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	
 	String server;
 	String userName;
+	String lastChat;
 	
 
 	@Override
@@ -185,11 +187,16 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 			ChatActivity.this.listUsers();
 			return true;
 		}
+		if (id == R.id.disconnect) {
+			this.finish();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
 	
 	private void listChats(){
+		lastChat = currentChat;
 		currentChat = null;		
 		ChatActivity.this.setTitle("Chat list");
 		textScroll.setVisibility(View.INVISIBLE);
@@ -261,6 +268,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	
 	
 	private void listUsers(){
+		lastChat = currentChat;
 		currentChat = null;
 		ChatActivity.this.setTitle("All users");
 		textScroll.setVisibility(View.INVISIBLE);
@@ -271,16 +279,17 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		userNames.clear();
 		
 		
-		Object[] keys = users.keySet().toArray();
 		
-		Arrays.sort(keys);
+		ArrayList<String> keys = new ArrayList<String>(users.keySet());
 		
+		
+		Collections.sort(keys, String.CASE_INSENSITIVE_ORDER);
+	
+				
 		
 		for (Object s:keys){			
 			userNames.add(s.toString());
 		}
-		
-		
 		
 		
 		userList.setVisibility(View.VISIBLE);
@@ -486,4 +495,16 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		
 		
 	}
+	
+	public void onBackPressed(){
+	     //If we are in list chars or list users
+		if (currentChat == null){
+			selectChat(lastChat);
+		} else {
+			//Froma a chat, show chat list
+			listChats();
+		}	
+	}
+	
+	
 }
