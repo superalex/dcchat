@@ -89,8 +89,10 @@ public class DCChat {
 				
 			}
 			
-			
 		}
+		os.close();
+		is.close();
+		socket.close();	
 	}
 
 	public void sendDirectMessage(String userSid, String text) throws IOException {
@@ -110,9 +112,6 @@ public class DCChat {
 
 	public void disconnect() throws IOException {
 		this.connected = false;
-		os.close();
-		is.close();
-		socket.close();
 	}
 
 	private String cleanText(String text) {
