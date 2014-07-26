@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.kaleidos.dcchat.async.DcChatAsyncTask;
+import net.kaleidos.dcchat.async.SendMessageAsyncTask;
 import net.kaleidos.dcchat.listener.Messageable;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -349,15 +350,16 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		
 	}
 	
-	
 	private void sendMessage(){
 		String msg = userMessage.getText().toString();
 		userMessage.setText("");
 		try{
 			if (currentChat.equals(PUBLIC_CHAT)) {
-				dcChatAsyncTask.getDcchat().sendBroadcastMessage(msg, false);
+				
+				new SendMessageAsyncTask(dcChatAsyncTask.getDcchat(), msg, null).start();
 			} else {
-				dcChatAsyncTask.getDcchat().sendDirectMessage(currentChat, msg);
+				
+				new SendMessageAsyncTask(dcChatAsyncTask.getDcchat(), msg, currentChat).start();
 				
 				
 				if (!privateMessages.containsKey(currentChat)){

@@ -1,7 +1,6 @@
 package net.kaleidos.dcchat.async;
 
 import java.io.IOException;
-import java.util.Random;
 
 import net.kaleidos.dcchat.Base32;
 import net.kaleidos.dcchat.DCChat;
