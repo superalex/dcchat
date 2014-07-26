@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 
 import javax.net.SocketFactory;
@@ -59,7 +60,7 @@ public class DCChat {
 				String action = message.substring(1, 4);
 				String text = message.substring(5);
 
-				//System.out.println(message);
+				//System.out.println("------>" + message);
 				if (action.equals("SID") && context.equals("I")) {
 					receiveSID(text);
 
@@ -97,9 +98,9 @@ public class DCChat {
 	}
 
 	public void sendDirectMessage(String userSid, String text) throws IOException {
-		String message = String.format("DMSG %s %s %s PM%s\n", 
+		String message = String.format("EMSG %s %s %s PM%s\n", 
 			this.ssid, userSid, prepareText(text), this.ssid);
-		os.writeBytes(message);		
+		os.write(message.getBytes("UTF-8"));
 	}
 
 	public void sendBroadcastMessage(String text, boolean isMe) throws IOException {				
@@ -108,7 +109,7 @@ public class DCChat {
 			message += " ME1"; 
 		}
 		message += "\n";
-		os.writeBytes(message);
+		os.write(message.getBytes("UTF-8"));
 	}
 
 	public void disconnect() throws IOException {
