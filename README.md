@@ -1,4 +1,4 @@
-dcchat
+DCChat
 ======
 
 Cliente Android y biblioteca para usar el protocolo de chat ADC de direct connect. 
