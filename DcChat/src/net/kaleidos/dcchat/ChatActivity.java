@@ -299,7 +299,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		
 		privateMessages.get(PUBLIC_CHAT).add(text);
 		
-		if (currentChat == PUBLIC_CHAT) {
+		if (PUBLIC_CHAT.equals(currentChat)) {
 			runOnUiThread(new Runnable() {
 	            @Override
 	            public void run() {
@@ -322,7 +322,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		privateMessages.get(message.getUserSid()).add(text);
 		
 		
-		if (currentChat == message.getUserSid()) {
+		if (currentChat.equals(message.getUserSid())) {
 		
 			runOnUiThread(new Runnable() {
 	            @Override
@@ -330,7 +330,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	            	textView.append(text+"\n");
 	            }
 	        });
-		}
+		} 
 		
 	}
 
@@ -354,7 +354,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		String msg = userMessage.getText().toString();
 		userMessage.setText("");
 		try{
-			if (currentChat == PUBLIC_CHAT) {
+			if (currentChat.equals(PUBLIC_CHAT)) {
 				dcChatAsyncTask.getDcchat().sendBroadcastMessage(msg, false);
 			} else {
 				dcChatAsyncTask.getDcchat().sendDirectMessage(currentChat, msg);
