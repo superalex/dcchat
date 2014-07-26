@@ -60,11 +60,36 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 	String server;
 	String userName;
 	String lastChat;
+
+	private ProgressDialog progress;
+	private boolean connected = false;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		
+		progress = ProgressDialog.show(this, "Connecting", "Conecting to server...");
+		
+		// 15 seconds coundowntimer
+		new CountDownTimer(15000, 1000) {
+
+			public void onTick(long millisUntilFinished) {
+
+			}
+
+			public void onFinish() {
+				if (!connected){
+					Toast.makeText(getApplicationContext(),"Sorry, connection failed", Toast.LENGTH_LONG).show();
+					try {
+						dcChatAsyncTask.disconnect();
+					} catch (Exception e) {
+					}
+					finish(); // finish Activity
+				}
+			}
+		}.start();
 		
 		
 		Bundle extras = getIntent().getExtras();
@@ -183,7 +208,7 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 			return true;
 		}
 		if (id == R.id.disconnect) {
-			ProgressDialog.show(this, "Disconnecting", "Disconnecting from server...");
+			progress = ProgressDialog.show(this, "Disconnecting", "Disconnecting from server...");
 			
 			// 5 seconds coundowntimer
 			new CountDownTimer(5000, 1000) {
@@ -320,6 +345,10 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 
 	@Override
 	public void receiveBroadcastMessage(final Message message) {
+		
+		if (!connected){
+			serverConnect();
+		}
 		
 		
 		
@@ -502,6 +531,12 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
             }
         });
 		this.finish();
+	}
+
+
+	public void serverConnect() {
+		progress.dismiss();
+		connected = true;		
 	}
 	
 	
