@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.kaleidos.dcchat.async.DcChatAsyncTask;
@@ -260,9 +261,18 @@ public class ChatActivity extends ActionBarActivity implements Messageable {
 		userMessageOk.setVisibility(View.INVISIBLE);
 		
 		userNames.clear();
-		for (String s:users.keySet()){			
-			userNames.add(s);
+		
+		
+		Object[] keys = users.keySet().toArray();
+		
+		Arrays.sort(keys);
+		
+		
+		for (Object s:keys){			
+			userNames.add(s.toString());
 		}
+		
+		
 		
 		
 		userList.setVisibility(View.VISIBLE);
